@@ -12,16 +12,16 @@ class App extends Component {
     price2: 0,
   }
 
-  handleChange = ({ target: { value, name } }) => this.setState({ [name]: value });
+handleChange = ({ target: { value, name } }) => this.setState({ [name]: value })
 
-  createAndDonwload = () => {
-    axios.post('/create-pdf',  this.state)
-      .then(() => axios.get('/fetch-pdf'), { responseType: 'blob' })
-      .then((response) => {
-        const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
-        saveAs(pdfBlob, 'newPdf.pdf');
-      })
-  }
+createAndDonwload = () => {
+  axios.post(`http://localhost:4000/create-pdf`, this.state)
+    .then(() => axios.get(`http://localhost:4000/fetch-pdf`), { responseType: 'blob' })
+    .then((response) => {
+      const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+      saveAs(pdfBlob, 'newPdf.pdf');
+    })
+}
 
   render() {
     return (
