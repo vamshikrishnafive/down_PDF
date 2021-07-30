@@ -1,31 +1,39 @@
-import logo from './logo.svg';
+import React, { Component } from 'react'
+import axios from 'axios';
+import { saveAs } from "file-saver";
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <div className="App-headerr">"Welcome </div>
-    </div>
-    <div className="Appp">
-      <header.Appler-headers>
-    </div>
-    <div className="App">
-      <header className="App-header"> 
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    name: ' ',
+    receiptId: 0,
+    price1: 0,
+    price2: 0,
+  }
+
+  handleChange = ({ target: { value, name } }) => this.setState({ [name]: value });
+
+  createAndDonwload = () => {
+    axios.post('/create-pdf',  this.state)
+      .then(() => axios.get('/fetch-pdf'), { responseType: 'blob' })
+      .then((response) => {
+        const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+        saveAs(pdfBlob, 'newPdf.pdf');
+      })
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <input type="text" placeholder="Name" name="name" onChange={this.handleChange}></input>
+        <input type="text" placeholder="receip ID" name="receiptId" onChange={this.handleChange}></input>
+        <input type="text" placeholder="price1" name="price1" onChange={this.handleChange}></input>
+        <input type="text" placeholder="price2" name="price2" onChange={this.handleChange}></input>
+        <button onClick={this.createAndDonwload} >Donwload</button>
+      </div>
+    );
+  }
 }
 
 export default App;
